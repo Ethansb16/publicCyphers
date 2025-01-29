@@ -50,12 +50,13 @@ if __name__ == '__main__':
     print('Alice is sending message:', M)
     int_M = int(M.encode().hex(), 16)
     C = mod_power(int_M, e, n)
+    print('Message', int_M)
 
     # Bob decrypts Alice's message with his private key
     D = mod_power(C, d, n)
     M2 = int_ascii(D)
     print('Bob recieved message:', M2)
-    print('\n\n\n\n')
+    print('\n')
     
     print('Task 2')
 
@@ -68,6 +69,7 @@ if __name__ == '__main__':
     # Mallory recieves the cipher and changes it to C_prime
     r = 2
     C_prime = (C * mod_power(r, e, n)) % n
+    print('C_prime: ',C_prime)
 
     # Mallory sends C_prime to Bob
     D = mod_power(C_prime, d, n)
@@ -76,3 +78,20 @@ if __name__ == '__main__':
 
     # Result recieved is
     print('Mallory could decrypt:', int_ascii(D//2))
+
+    M1 = 'Hello Bob'
+    int_M1 = int(M1.encode().hex(), 16)
+    S1 = mod_power(int_M1, e, n)
+
+    M2 = 'How are you doing Bob'
+    int_M2 = int(M2.encode().hex(), 16)
+    S2 = mod_power(int_M2, e, n)
+    print(S1, S2)
+
+    S3 = (S1 * S2) % n
+    D3 = mod_power(S3, d, n)
+    M3 = int_ascii(D3)
+    S4 = mod_power(int(M3.hex(), 16), e, n)
+
+    print('S3 -S4', S3 - S4)
+    

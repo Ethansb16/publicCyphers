@@ -18,11 +18,12 @@ def generate_public_key(private_key, q, a):
 def compute_shared_secret(their_public_key, private_key, q):
     return pow(their_public_key, private_key) % q
 
-def send_message(message, iv, sender_key,  reciever_key):
+def send_message(original_message, iv, sender_key,  reciever_key):
     """Simulates sending a message between users with """
-    message = pad(message, AES.block_size)
+    message = pad(original_message, AES.block_size)
     cipher = AES.new(sender_key, AES.MODE_CBC, iv=iv)
     encryption = cipher.encrypt(message)
+    print(f"encrypted message: {original_message} -> {encryption}")
     cipher = AES.new(reciever_key, AES.MODE_CBC, iv= iv)
     return unpad(cipher.decrypt(encryption), AES.block_size)
 
@@ -37,12 +38,14 @@ def main():
     #alice keys
     XA = generate_private_key(q)
     YA = power(alpha, XA, q)
+
     print(f"alice private key: {XA}")
     print(f"alice public key: {YA}")
 
     #bob keys
     XB = generate_private_key(q)
     YB = power(alpha, XB, q)
+
     print(f"bob public key: {XB}")
     print(f"bob private key: {YB}")
 
@@ -56,11 +59,11 @@ def main():
     sha_bob = sha256(str(k_bob).encode()).digest()[:16]
     
     m0 = b'Hi Alice!'
-    print(send_message(m0, iv, sha_bob, sha_alice))
     m1 = b'Hi Bob!'
-    print(send_message(m1, iv, sha_alice, sha_bob))
-
     
+    print("Intercepted messages")
+    print(send_message(m0, iv, sha_bob, sha_alice))
+    print(send_message(m1, iv, sha_bob, sha_alice))
 
 
 if __name__ == "__main__": 

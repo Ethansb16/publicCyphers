@@ -37,14 +37,18 @@ def main():
 
     #alice keys
     XA = generate_private_key(q)
-    YA = power(alpha, XA, q)
+
+    #modified
+    YA = q
 
     print(f"alice private key: {XA}")
     print(f"alice public key: {YA}")
 
     #bob keys
     XB = generate_private_key(q)
-    YB = power(alpha, XB, q)
+
+    #modified
+    YB = q
 
     print(f"bob public key: {XB}")
     print(f"bob private key: {YB}")
@@ -64,7 +68,6 @@ def main():
     print("Intercepted messages")
     print(send_message(m0, iv, sha_bob, sha_alice))
     print(send_message(m1, iv, sha_bob, sha_alice))
-
 
 if __name__ == "__main__": 
     main()
